@@ -61,7 +61,7 @@ module.exports = {
 
     } catch (error) {
       response.setError({
-        code: grpc.status.INTERNAL,
+        code: grpc.status.UNKNOWN,
         message: 'Something went wrong when cleaning the cart'
       });
     }
@@ -97,6 +97,39 @@ module.exports = {
   },
 
   async addItem(cartItem) {
+    const response = new Response();
+    const { cartId, product } = cartItem;
+    const cart = (await this.getById(cartId)).result;
+
+    if (!cart) {
+      response.setError({
+        code: grpc.status.NOT_FOUND,
+        message: 'Cart not found.'
+      })
+    }
+
+    const index = cart.products
+      .map(p => p.productId)
+      .indexOf(product.productId);
+
+    if (index < 0) {
+      cart.products.push(product);
+    } else {
+      cart.products[index].quantity = product.quantity;
+      cart.products[index].price = product.price;
+    }
+
+    try {
+      const updatedCart = await cart.save();
+      response.setResult(this.getUpdate(updatedCart))
+      return response;
+
+    } catch (error) {
+      response.setError({
+        code: grpc.status.UNKNOWN,
+        message: 'Something went wrong when adding a item into the cart.'
+      });
+    }
   },
 
   async addCoupon(cartCoupon) {

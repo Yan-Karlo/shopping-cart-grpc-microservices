@@ -13,10 +13,15 @@ module.exports = {
   },
 
   async getById(call, callback) {
+    const { id } = call.request;
+    const response = await cartService.getById(id);
+    return this.buildCallback(response, callback)
   },
 
   async addItem(call, callback) {
-  },
+    const response = await cartService.addItem(call.request);
+    return this.buildCallback(response, callback)
+},
 
   async addCoupon(call, callback) {
   },
