@@ -215,14 +215,11 @@ module.exports = {
     }
   },
 
-  async updateCart(cart) {
+  getUpdate(document) {
+    const response = { updatedAt: document.updatedAt }
+
+    return response;
   },
-
-  // getUpdate(document) {
-  //   const response = { updatedAt: document.updatedAt }
-
-  //   return response;
-  // },
 
   getUnknownError(error) {
     const response = new Response()
