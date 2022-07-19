@@ -7,6 +7,9 @@ module.exports = {
   },
 
   async clean(call, callback) {
+    const { id } = call.request;
+    const response = await cartService.clean(id);
+    return this.buildCallback(response, callback);
   },
 
   async getById(call, callback) {
