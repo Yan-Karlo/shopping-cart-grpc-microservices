@@ -26,6 +26,21 @@ module.exports = class CartService {
 
   }
 
+  create = async (cart) => {
+    const response = new Response();
+    console.log(cart)
+    return this.client.create({ ...cart }).then(
+      (resp) => {
+        response.setResult(resp);
+        return response;
+      })
+      .catch((error) => {
+        response.setError(error)
+        return response;
+      });
+
+  }
+
   getById = async (id) => {
     const response = new Response();
 

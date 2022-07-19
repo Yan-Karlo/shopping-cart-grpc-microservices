@@ -12,6 +12,16 @@ module.exports = {
     const validCart = await new CartModel(cart)
 
     try {
+      const cart = await CartModel.findOne({ 'userId': cart.userId });
+      console.log(cart)
+      if (cart) {
+        response.setResult({
+          _id: cart._id,
+          createdAt: cart.createdAt,
+        });
+        return response;
+      }
+
       const newCart = await validCart.save();
       response.setResult({
         _id: newCart._id,
@@ -20,7 +30,7 @@ module.exports = {
       return response;
 
     } catch (error) {
-      return this.getUnknownError('creating a new shopping cart');
+      return this.getUnknownError(error);
     };
   },
 
