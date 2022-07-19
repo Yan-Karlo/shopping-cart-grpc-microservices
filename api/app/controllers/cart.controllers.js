@@ -10,6 +10,12 @@ module.exports = class CartController{
     res.status(200).json(response)
   }
 
+  clean = async (req, res) => {
+    const { id } = req.params;
+    const response = await this.service.clean(id)
+    return res.status(response.httpStatus || 200).json(response.result);
+  }
+
   getById = async (req, res) => {
     const { id } = req.params;
     const response = await this.service.getById(id)

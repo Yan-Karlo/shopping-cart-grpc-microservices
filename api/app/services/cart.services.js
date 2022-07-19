@@ -11,16 +11,32 @@ module.exports = class CartService {
 
   ping = () => 'pong';
 
+  clean = async (id) => {
+    const response = new Response();
+
+    return this.client.clean({ id }).then(
+      (resp) => {
+        response.setResult(resp);
+        return response;
+      })
+      .catch((error) => {
+        response.setError(error)
+        return response;
+      });
+
+  }
+
   getById = async (id) => {
     const response = new Response();
 
-    await this.client.getById({ id }).then(resp => {
-      response.setResult(resp);
-    }).catch((error) => {
-      console.log(JSON.stringify(error, null, 4))
-      response.setError(error);
-    });
+    return this.client.getById({ id })
+      .then(resp => {
+        response.setResult(resp);
+        return response;
 
-    return response
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
   }
 }
