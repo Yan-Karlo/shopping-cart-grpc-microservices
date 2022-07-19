@@ -1,0 +1,109 @@
+syntax="proto3";
+
+package cart;
+
+import "google/protobuf/empty.proto";
+
+service CartService {
+  rpc Clean (CartByIdRequest) returns (UpdateResponse);
+  rpc Create (CreateRequest) returns (CreateResponse);
+  rpc GetById (CartByIdRequest) returns (Cart);
+  rpc AddItem (AddItemRequest) returns (UpdateResponse);
+  rpc AddCoupon (AddCouponRequest) returns (UpdateResponse);
+  rpc QtyUpdate (QtyUpdateRequest) returns (UpdateResponse);
+  rpc Calculate (CartByIdRequest) returns (CalculateResponse);
+  rpc RemoveItem (RemoveItemRequest) returns (UpdateResponse);
+}
+
+message AddCouponRequest {
+  string cartId = 1;
+  Coupon coupon = 2;
+}
+
+message AddItemRequest {
+  string cartId = 1;
+  ProductNoTimestamps product = 2;
+}
+
+message CalculateResponse {
+  CartWithSubTotal cart = 1;
+  double subTotal = 2;
+  double discount = 3;
+  double total = 4;
+  string generatedAt = 5;
+}
+
+message Cart {
+  string _id = 1;
+  string userId = 2;
+  repeated Product products = 3;
+  Coupon coupon = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message CartWithSubTotal {
+  string _id = 1;
+  string userId = 2;
+  repeated ProductWithSubtotal products = 3;
+  Coupon coupon = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message CartByIdRequest{
+  string id = 1;
+}
+
+message Coupon {
+  string id = 1;
+  double percentage = 2;
+}
+
+message CreateResponse {
+  string _id = 1;
+  string createdAt = 2;
+}
+
+message CreateRequest {
+  repeated ProductNoTimestamps products = 1;
+  string userId = 2;
+}
+
+message Product {
+  string productId = 1;
+  int32 quantity = 2;
+  double price = 3;
+  string createdAt = 4;
+  string updatedAt = 5;
+}
+
+message ProductNoTimestamps {
+  string productId = 1;
+  int32 quantity = 2;
+  double price = 3;
+}
+
+message ProductWithSubtotal {
+  string productId = 1;
+  int32 quantity = 2;
+  double price = 3;
+  double subTotal = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message QtyUpdateRequest {
+  string cartId = 1;
+  string productId = 2;
+  int32 quantity = 3;
+}
+
+message RemoveItemRequest {
+  string cartId = 1;
+  string productId = 2;
+}
+
+message UpdateResponse {
+  string updatedAt = 1;
+}
