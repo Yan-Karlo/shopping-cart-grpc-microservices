@@ -29,13 +29,19 @@ module.exports = {
   },
 
   async qtyUpdate(call, callback) {
-  },
+    const response = await cartService.qtyUpdate(call.request);
+    return this.buildCallback(response, callback)
+},
 
   async calculate(call, callback) {
-  },
+    const response = await cartService.calculate(call.request);
+    return this.buildCallback(response, callback)
+},
 
   async removeItem(call, callback) {
-  },
+    const response = await cartService.removeItem(call.request);
+    return this.buildCallback(response, callback)
+},
 
   buildCallback(response, callback) {
     if (response.isError)
