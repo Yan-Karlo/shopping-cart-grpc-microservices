@@ -6,8 +6,8 @@ import "google/protobuf/empty.proto";
 
 service CartService {
   rpc Clean (CartByIdRequest) returns (UpdateResponse);
-  rpc Create (CreateRequest) returns (CreateResponse);
-  rpc GetById (CartByIdRequest) returns (Cart);
+  rpc Create (CreateRequest) returns (CartResponse);
+  rpc GetById (CartByIdRequest) returns (CartResponse);
   rpc AddItem (AddItemRequest) returns (UpdateResponse);
   rpc AddCoupon (AddCouponRequest) returns (UpdateResponse);
   rpc QtyUpdate (QtyUpdateRequest) returns (UpdateResponse);
@@ -33,7 +33,7 @@ message CalculateResponse {
   string generatedAt = 5;
 }
 
-message Cart {
+message CartResponse {
   string _id = 1;
   string userId = 2;
   repeated Product products = 3;
