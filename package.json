@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:cart:server": "nodemon ./shopping-cart/index.js"
+    "dev:cart:server": "nodemon ./shopping-cart/index.js",
+    "dev:api:server": "nodemon ./api/index.js"
   },
   "keywords": [],
   "author": "",

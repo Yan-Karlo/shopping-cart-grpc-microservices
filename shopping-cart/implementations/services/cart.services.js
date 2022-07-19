@@ -2,60 +2,259 @@ const mongoose = require('mongoose');
 const grpc = require('grpc');
 const Response = require('../../entities/response.entity');
 const CartModel = require('../../models/cart.model');
+const CartCalculator = require('../../entities/cart-calculator.entity');
 
 const isValidId = mongoose.Types.ObjectId.isValid
 
 module.exports = {
   async create(cart) {
     const response = new Response();
-
     const validCart = await new CartModel(cart)
 
     try {
       const newCart = await validCart.save();
-
       response.setResult({
         _id: newCart._id,
         createdAt: newCart.createdAt,
       });
+      return response;
 
     } catch (error) {
-      response.setError({
-        code:grpc.status.INTERNAL,
-        message: 'Something went wrong when creating a new shopping cart'
-      });
-    }
-
-    return response;
+      return this.getUnknownError('creating a new shopping cart');
+    };
   },
 
   async clean(id) {
+    const response = new Response();
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    const cart = (await this.getById(id)).result;
+
+    if (!cart) {
+      return this.getCartNotFoundError()
+    }
+
+    cart.products = [];
+    cart.coupon = null;
+
+    try {
+      const cleanCart = await cart.save();
+      response.setResult(this.getUpdate(cleanCart));
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
+
   },
 
   async getById(id) {
+    const response = new Response();
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    try {
+      const result = await CartModel.findById(id)
+      response.setResult(result);
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
   },
 
   async addItem(cartItem) {
+    const response = new Response();
+    const { cartId: id, product } = cartItem;
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    const cart = (await this.getById(id)).result;
+
+    if (!cart) {
+      return this.getCartNotFoundError()
+    }
+
+    const index = cart.products
+      .map(p => p.productId)
+      .indexOf(product.productId);
+
+    if (index < 0) {
+      cart.products.push(product);
+    } else {
+      cart.products[index].quantity = product.quantity;
+      cart.products[index].price = product.price;
+    }
+
+    try {
+      const updatedCart = await cart.save();
+      response.setResult(this.getUpdate(updatedCart))
+      return response;
+
+    } catch (error) {
+      return getUnknownError(error)
+    }
   },
 
   async addCoupon(cartCoupon) {
+    const response = new Response();
+    const options = {
+      new: true,
+      lean: true,
+    }
+    const { cartId: id, coupon } = cartCoupon;
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    try {
+      response.setResult(await CartModel.findByIdAndUpdate(
+        { _id: id },
+        { coupon },
+        options,
+      ));
+
+      return response;
+
+    } catch (error) {
+      return this.getUnknownError(error)
+    }
   },
 
   async qtyUpdate(cartItem) {
+    const response = new Response();
+    const { cartId: id, productId, quantity } = cartItem;
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    const cart = (await this.getById(id)).result;
+
+    if (!cart) {
+      return this.getCartNotFoundError()
+    }
+
+
+    const index = cart.products.map(p => p.productId).indexOf(productId);
+
+    if (index < 0) {
+      response.setError({
+        code: grpc.status.NOT_FOUND,
+        message: 'The product was not found in the cart.'
+      });
+      return response
+    }
+
+    cart.products[index].quantity = quantity;
+
+    try {
+      const updatedCart = await cart.save()
+      response.setResult(this.getUpdate(updatedCart));
+      return response;
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
   },
 
-  async calculate(cartId) {
+  async calculate(cart) {
+    const response = new Response();
+
+    if (!isValidId(cart.id)) {
+      return this.getInvalidIdError();
+    }
+
+    return await this.getById(cart.id)
+      .then(data => {
+        response.setResult(new CartCalculator(data.result));
+        return response;
+      })
+      .catch(error => {
+        return this.getUnknownError(error);
+      })
   },
 
   async removeItem(itemCancelation) {
+    const response = new Response();
+    const { cartId: id, productId } = itemCancelation;
+
+    if (!isValidId(id)) {
+      return this.getInvalidIdError();
+    }
+
+    const cart = (await this.getById(id)).result
+
+    if (!cart) {
+      return this.getCartNotFoundError()
+    }
+
+    const index = cart.products.map(p => p.productId).indexOf(productId);
+
+    if (index < 0) {
+      return this.getProductNotFoundError();
+    }
+
+    cart.products.splice(index, 1);
+
+    try {
+      const result = await cart.save();
+      response.setResult(this.getUpdate(result));
+      return response;
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
   },
 
-  async updateCart(cart) {
-  },
-
-  getUpdate(document){
+  getUpdate(document) {
     const response = { updatedAt: document.updatedAt }
 
     return response;
+  },
+
+  getUnknownError(error) {
+    const response = new Response()
+    response.setError({
+      code: grpc.status.UNKNOWN,
+      message: error.message
+    })
+
+    return response
+  },
+
+  getInvalidIdError() {
+    const response = new Response();
+    response.setError({
+      code: grpc.status.INVALID_ARGUMENT,
+      message: 'Invalid Id.'
+    })
+    return response
+  },
+
+  getCartNotFoundError() {
+    const response = new Response();
+    response.setError({
+      code: grpc.status.NOT_FOUND,
+      message: 'The cart was not found.'
+    })
+    return response
+  },
+
+  getProductNotFoundError() {
+    const response = new Response();
+    response.setError({
+      code: grpc.status.NOT_FOUND,
+      message: 'The product was not found.'
+    })
+    return response
   },
 };
