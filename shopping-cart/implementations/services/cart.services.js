@@ -125,15 +125,31 @@ module.exports = {
       return response;
 
     } catch (error) {
-      response.setError({
-        code: grpc.status.UNKNOWN,
-        message: 'Something went wrong when adding a item into the cart.'
-      });
+      return getUnknownError('adding an item.')
     }
   },
 
   async addCoupon(cartCoupon) {
-  },
+    const response = new Response();
+    const options = {
+      new: true,
+      lean: true,
+    }
+    const { cartId, coupon } = cartCoupon;
+
+    try {
+      response.setResult(await CartModel.findByIdAndUpdate(
+        { _id: cartId },
+        { coupon },
+        options,
+      ));
+
+      return response;
+
+    } catch (error) {
+      return this.getUnknownError('adding a coupon.')
+    }
+},
 
   async qtyUpdate(cartItem) {
   },
@@ -152,4 +168,11 @@ module.exports = {
 
     return response;
   },
+
+  getUnknownError(when) {
+    return new Response().setError({
+      code: grpc.status.UNKNOWN,
+      message: `Something went wrong when ${when}`
+    })
+  }
 };

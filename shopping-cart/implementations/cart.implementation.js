@@ -21,9 +21,11 @@ module.exports = {
   async addItem(call, callback) {
     const response = await cartService.addItem(call.request);
     return this.buildCallback(response, callback)
-},
+  },
 
   async addCoupon(call, callback) {
+    const response = await cartService.addCoupon(call.request);
+    return this.buildCallback(response, callback)
   },
 
   async qtyUpdate(call, callback) {
