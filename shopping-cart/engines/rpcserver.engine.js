@@ -6,18 +6,45 @@ const dependencies = require('../dependencies/server.dependencies');
 
 module.exports = class RpcServerEngine{
 
-  constructor(url) {}
+  constructor(url) {
+    this.url = url
+    this.server = new grpc.Server();
+    this.DefinePackage()
+      .defineProtoBuf()
+      .implementService()
+      .bindServer();
+  }
 
   start = () => {
-    console.log('Server is running')
+    console.log('Shopping Cart Server is starting...');
+    this.server.start();
+    console.log('Shopping Cart Server is Running');
+    console.log('===================================')
   }
 
-  DefinePackage = () => {}
+  DefinePackage = ({ protoPath, protoOptions } = dependencies) => {
+    console.log('===================================')
+    console.log('Package definition ...');
+    this.packageDefinition = protoLoader.loadSync(protoPath, protoOptions);
+    return this;
+  }
 
   defineProtoBuf() {
+    console.log('Defining the protobuf...');
+    this.proto = grpc.loadPackageDefinition(this.packageDefinition).cart;
+    return this;
   }
 
-  implementService = () => {}
+  implementService = ({ implementation } = dependencies) => {
+    console.log('implementing the service...');
+    this.server.addService(this.proto.CartService.service, implementation);
+    return this
+  }
 
-  bindServer() { }
+  bindServer({ url } = dependencies) {
+    console.log('binding the server...');
+    const creds = grpc.ServerCredentials.createInsecure();
+    this.server.bind(this.url, creds);
+    return this
+  }
 }
