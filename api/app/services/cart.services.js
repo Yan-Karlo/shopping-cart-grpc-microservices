@@ -30,7 +30,7 @@ module.exports = class CartService {
     const response = new Response();
     return this.client.create({ ...cart }).then(
       (resp) => {
-        response.setResult(resp); 
+        response.setResult(resp);
         return response;
       })
       .catch((error) => {
@@ -44,6 +44,82 @@ module.exports = class CartService {
     const response = new Response();
 
     return this.client.getById({ id })
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
+  addItem(cartId, product) {
+    const response = new Response();
+
+    return this.client.addItem({
+      cartId,
+      product
+    })
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
+  addCoupon(cartId, coupon) {
+    const response = new Response();
+
+    return this.client.addCoupon({
+      cartId,
+      coupon
+    })
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
+  qtyUpdate(itemUpdate) {
+    const response = new Response();
+
+    return this.client.qtyUpdate(itemUpdate)
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
+  calculate(id) {
+    const response = new Response();
+
+    return this.client.calculate({id})
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
+  removeItem(itemExclusion) {
+    const response = new Response();
+
+    return this.client.removeItem({...itemExclusion})
       .then(resp => {
         response.setResult(resp);
         return response;
