@@ -1,0 +1,27 @@
+const path = require('path');
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
+const grpc_promise = require('grpc-promise');
+const { promisify } = require('util');
+
+module.exports = class RPCClient {
+  constructor(client) {
+    const protoPath = path.resolve(__dirname, '../../proto', `${client.fileName}.proto`)
+    const credentials = grpc.credentials.createInsecure();
+    const protoDef = protoLoader.loadSync(protoPath, client.protoConfig);
+    const packageDefinition = grpc.loadPackageDefinition(protoDef)[client.pack];
+    const grpc_client = new packageDefinition[client.serviceName](client.address, credentials);
+
+    Object.entries(grpc_client.__proto__).map(([prop, value]) => {
+    if (value.originalName !== undefined) {
+      grpc_client[prop] = promisify(value);
+    }
+  });
+
+    this.client = grpc_client
+  }
+
+  getClient() {
+    return this.client;
+  }
+}

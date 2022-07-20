@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const routes = require('./routes');
 const path = require('path');
 const httpServer = require('http');
 const IndexRouter = require('../app/routes/index.routes');
@@ -17,8 +16,6 @@ module.exports = class Server {
     this.app.use(express.static(path.join(__dirname, 'public')))
     this.app.use(cors());
     this.mapRoutes();
-    //loading routes
-    //routes(this.app);
     this.engine = httpServer.createServer(this.app);
   }
 

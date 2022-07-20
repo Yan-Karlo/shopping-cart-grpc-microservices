@@ -9,18 +9,21 @@ const isValidId = mongoose.Types.ObjectId.isValid
 module.exports = {
   async create(cart) {
     const response = new Response();
-    const validCart = await new CartModel(cart)
+    const validCart = await new CartModel(cart);
 
     try {
-      const newCart = await validCart.save();
-      response.setResult({
-        _id: newCart._id,
-        createdAt: newCart.createdAt,
-      });
+      const oldCart = await CartModel.findOne({ 'userId': cart.userId });
+
+      if (oldCart) {
+        response.setResult(oldCart);
+        return response;
+      }
+
+      response.setResult( await validCart.save());
       return response;
 
     } catch (error) {
-      return this.getUnknownError('creating a new shopping cart');
+      return this.getUnknownError(error);
     };
   },
 
