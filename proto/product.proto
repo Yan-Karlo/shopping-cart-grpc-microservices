@@ -30,7 +30,7 @@ message ProductResponse {
 }
 
 message UpdateRequest {
-  string productId = 1;
+  string id = 1;
   double price = 2;
 }
 

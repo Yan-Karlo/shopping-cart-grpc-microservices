@@ -10,7 +10,8 @@ module.exports = class Response {
   setError(error) {
     this.result = {
       code : error.code,
-      message : error.details || error.message
+      message: error.details || error.message,
+      source: error.source // 'N/A'
     }
     this.httpStatus = this.getHTTPStatus(error.code),
     this.isError = true;
@@ -21,6 +22,9 @@ module.exports = class Response {
   }
 
   getHTTPStatus(grpc_code) {
+    if (!grpc_code) {
+      return 500;
+    }
     const index = {}
     index[grpc.status.ALREADY_EXISTS] = 400
     index[grpc.status.ABORTED] = 500

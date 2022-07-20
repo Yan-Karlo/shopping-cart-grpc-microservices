@@ -34,7 +34,7 @@ module.exports = {
     }
   },
 
-  async updatePrice({ productId: id, price } = newPrice) {
+  async updatePrice({ id, price } = newPrice) {
     if (!isValidId(id))
       return this.getInvalidIdError();
 
