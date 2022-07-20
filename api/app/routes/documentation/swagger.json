@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loja Integrada API - Code Challenge",
+    "description": "A shopping-cart API must be create in order to show the candidate style of coding through the basic operations that are regarding a e- commerce shopping cart.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Yan Karlo Teixeira",
+      "email": "yan.karlo29@gmail.com"
+    }
+  },
+
+  "basePath": "",
+
+  "paths": {
+    "/v1/carts/{cartId}": {
+      "get": {
+        "description": "Recovers a shopping cart information.",
+        "summary": "Recovers all shopping-cart information based on the cartId paramenter.",
+        "tags": ["CARTS"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cartId",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success, returning the cart object with subtotals",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties":{
+                    "_id":{
+                      "type": "string",
+                      "description": "It's the cart id"
+                    },
+                    "userId":{
+                      "type": "string",
+                      "description": "It's the user's id who is cart's owner id"
+                    },
+                    "products":{
+                      "type": "array",
+                      "description": "It's the user's id who is cart's owner id"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Id"
+          },
+          "404": {
+            "description": "Cart not found"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/v1/carts/calculate/{cartId}": {
+      "get": {
+        "description": "Recovers all shopping cart information, including the totals and subtotals.",
+        "summary": "Recovers all shopping-cart information,  including the financial ones, based on the cartId paramenter.",
+        "tags": ["CARTS"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cartId",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid Id"
+          },
+          "404": {
+            "description": "Cart not found"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    }
+  }
+}
