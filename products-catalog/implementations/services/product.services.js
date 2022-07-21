@@ -26,7 +26,37 @@ module.exports = {
 
     try {
       const result = await ProductModel.find({})
-      response.setResult({products : [...result]});
+      response.setResult({ products: [...result] });
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
+  },
+
+  async getMany(products) {
+    const response = new Response();
+    const invalidIds = products.filter(id => !isValidId(id))
+
+    if (invalidIds.length > 0) {
+      response.setError({
+        code: grpc.status.INVALID_ARGUMENT,
+        message: `Invalid ID(s) were found:${[...invalidIds]}`,
+        source: 'product'
+      })
+      return response;
+    }
+
+    try {
+      const query = {
+          _id: {
+            $in: [...products.map(id => id.id)]
+          }
+      }
+      console.log(JSON.stringify(query,null,2))
+
+      const result = await ProductModel.find(query)
+      response.setResult({ products: [...result] });
       return response
 
     } catch (error) {
