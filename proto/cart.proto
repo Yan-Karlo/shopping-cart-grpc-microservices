@@ -12,6 +12,7 @@ service CartService {
   rpc AddCoupon (AddCouponRequest) returns (UpdateResponse);
   rpc QtyUpdate (QtyUpdateRequest) returns (UpdateResponse);
   rpc Calculate (CartByIdRequest) returns (CalculateResponse);
+  rpc GetByUserId (GetByUserIdRequest) returns (CartResponse);
   rpc RemoveItem (RemoveItemRequest) returns (UpdateResponse);
 }
 
@@ -68,6 +69,10 @@ message CreateResponse {
 message CreateRequest {
   repeated ProductNoTimestamps products = 1;
   string userId = 2;
+}
+
+message GetByUserIdRequest {
+  string userId = 1;
 }
 
 message Product {

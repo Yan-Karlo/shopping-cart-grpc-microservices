@@ -71,6 +71,19 @@ module.exports = {
     }
   },
 
+  async getByUserId(userId) {
+    const response = new Response();
+
+    try {
+      const result = await CartModel.findOne({ userId })
+      response.setResult(result);
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
+  },
+
   async addItem(cartItem) {
     const response = new Response();
     const { cartId: id, product } = cartItem;
@@ -228,7 +241,8 @@ module.exports = {
     const response = new Response()
     response.setError({
       code: grpc.status.UNKNOWN,
-      message: error.message
+      message: error.message,
+      source : 'shopping-cart'
     })
 
     return response
@@ -238,7 +252,8 @@ module.exports = {
     const response = new Response();
     response.setError({
       code: grpc.status.INVALID_ARGUMENT,
-      message: 'Invalid Id.'
+      message: 'Invalid Id.',
+      source : 'shopping-cart'
     })
     return response
   },
@@ -247,7 +262,8 @@ module.exports = {
     const response = new Response();
     response.setError({
       code: grpc.status.NOT_FOUND,
-      message: 'The cart was not found.'
+      message: 'The cart was not found.',
+      source : 'shopping-cart'
     })
     return response
   },
@@ -256,7 +272,8 @@ module.exports = {
     const response = new Response();
     response.setError({
       code: grpc.status.NOT_FOUND,
-      message: 'The product was not found.'
+      message: 'The product was not found.',
+      source : 'shopping-cart'
     })
     return response
   },

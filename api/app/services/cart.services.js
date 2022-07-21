@@ -54,6 +54,20 @@ module.exports = class CartService {
       });
   }
 
+  getByUserId = async (userId) => {
+    const response = new Response();
+    console.log(JSON.stringify({userId}, null, 4))
+    return this.client.getByUserId(userId)
+      .then(resp => {
+        response.setResult(resp);
+        return response;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response;
+      });
+  }
+
   addItem(cartId, product) {
     const response = new Response();
 

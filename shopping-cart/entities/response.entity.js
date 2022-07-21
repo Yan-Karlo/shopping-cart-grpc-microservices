@@ -9,7 +9,8 @@ module.exports = class Response {
   setError(error) {
     this.result = {
       code: error.code,
-      message: error.details || error.message
+      message: error.details || error.message,
+      source: error.source
     }
     this.isError = true;
   }

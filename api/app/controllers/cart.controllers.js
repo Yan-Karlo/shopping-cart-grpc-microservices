@@ -28,6 +28,12 @@ module.exports = class CartController{
     return res.status(response.httpStatus || 200).json(response.result);
   }
 
+  getByUserId = async (req, res) => {
+    const { userId } = req.params;
+    const response = await this.service.getByUserId({userId})
+    return res.status(response.httpStatus || 200).json(response.result);
+  }
+
   addItem = async (req, res) => {
     const { cartId } = req.params;
     const product = { ...req.body };
