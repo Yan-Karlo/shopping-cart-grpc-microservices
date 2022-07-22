@@ -1,0 +1,44 @@
+syntax="proto3";
+
+package product;
+
+import "google/protobuf/empty.proto";
+
+service ProductService {
+  rpc GetAll (google.protobuf.Empty) returns (ProductListResponse);
+  rpc GetById (GetByIdRequest) returns (ProductResponse);
+  rpc GetMany (GetManyRequest) returns (ProductListResponse);
+  rpc UpdatePrice (UpdateRequest) returns (UpdateResponse);
+}
+
+message ProductListResponse{
+  repeated ProductResponse products = 1;
+}
+
+message GetByIdRequest{
+  string id = 1;
+}
+
+message GetManyRequest{
+  repeated GetByIdRequest products = 1;
+}
+
+message ProductResponse { 
+  string _id = 1;
+  string productId = 2;
+  string description = 3;
+  int32 quantity = 4;
+  double price = 5 ;
+  bool isSuspended = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+message UpdateRequest {
+  string id = 1;
+  double price = 2;
+}
+
+message UpdateResponse {
+  string updatedAt = 1;
+}

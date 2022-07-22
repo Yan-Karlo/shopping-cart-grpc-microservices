@@ -15,6 +15,19 @@ module.exports = {
           defaults: true,
           oneofs: true,
         },
+      },
+      productClient: {
+        pack: 'product',
+        serviceName: 'ProductService',
+        address: 'localhost:3002',
+        fileName: 'product',
+        protoConfig: {
+          keepCase: true,
+          longs: String,
+          enums: String,
+          defaults: true,
+          oneofs: true,
+        },
       }
     }
   },

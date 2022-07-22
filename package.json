@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev:cart:server": "nodemon ./shopping-cart/index.js",
-    "dev:api:server": "nodemon ./api/index.js"
+    "dev:api:server": "nodemon ./api/index.js",
+    "dev:product:server": "nodemon ./products-catalog/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,8 @@
     "express": "^4.18.1",
     "grpc": "^1.24.11",
     "grpc-promise": "^1.4.0",
-    "mongoose": "^6.4.4"
+    "mongoose": "^6.4.4",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.5.0"
   }
 }

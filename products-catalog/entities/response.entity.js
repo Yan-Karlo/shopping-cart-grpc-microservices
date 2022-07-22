@@ -10,7 +10,7 @@ module.exports = class Response {
     this.result = {
       code: error.code,
       message: error.details || error.message,
-      source: error.source
+      source:  error.source,
     }
     this.isError = true;
   }

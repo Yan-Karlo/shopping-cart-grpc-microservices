@@ -8,12 +8,14 @@ module.exports = class Response {
   }
 
   setError(error) {
-    this.result = {
-      code : error.code,
-      message : error.details || error.message
-    }
     this.httpStatus = this.getHTTPStatus(error.code),
     this.isError = true;
+    this.result = {
+      httpStatus: this.httpStatus,
+      code : error.code,
+      message: error.details || error.message,
+      source: error.source // 'N/A'
+    }
   }
 
   setResult(result) {
@@ -21,6 +23,9 @@ module.exports = class Response {
   }
 
   getHTTPStatus(grpc_code) {
+    if (!grpc_code) {
+      return 500;
+    }
     const index = {}
     index[grpc.status.ALREADY_EXISTS] = 400
     index[grpc.status.ABORTED] = 500
@@ -28,9 +33,9 @@ module.exports = class Response {
     index[grpc.status.DATA_LOSS] = 500
     index[grpc.status.INTERNAL] = 500
     index[grpc.status.NOT_FOUND] = 404
-    index[grpc.status.INVALID_ARGUMENT] = 404
+    index[grpc.status.INVALID_ARGUMENT] = 400
     index[grpc.status.OK] = 200
-    index[grpc.status.UNKNOWN] = 200
+    index[grpc.status.UNKNOWN] = 500
     index[grpc.status.PERMISSION_DENIED] = 403
     index[grpc.status.UNIMPLEMENTED] = 404
     index[grpc.status.UNAUTHENTICATED] = 401

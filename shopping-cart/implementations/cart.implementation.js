@@ -18,6 +18,13 @@ module.exports = {
     return this.buildCallback(response, callback)
   },
 
+  async getByUserId(call, callback) {
+    const { userId } = call.request;
+    console.log(userId);
+    const response = await cartService.getByUserId(userId);
+    return this.buildCallback(response, callback)
+  },
+
   async addItem(call, callback) {
     const response = await cartService.addItem(call.request);
     return this.buildCallback(response, callback)
