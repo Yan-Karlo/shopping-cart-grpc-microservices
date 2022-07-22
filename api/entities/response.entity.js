@@ -8,13 +8,14 @@ module.exports = class Response {
   }
 
   setError(error) {
+    this.httpStatus = this.getHTTPStatus(error.code),
+    this.isError = true;
     this.result = {
+      httpStatus: this.httpStatus,
       code : error.code,
       message: error.details || error.message,
       source: error.source // 'N/A'
     }
-    this.httpStatus = this.getHTTPStatus(error.code),
-    this.isError = true;
   }
 
   setResult(result) {

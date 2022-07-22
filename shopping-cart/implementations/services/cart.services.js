@@ -15,11 +15,10 @@ module.exports = {
       const oldCart = await CartModel.findOne({ 'userId': cart.userId });
 
       if (oldCart) {
-        response.setResult(oldCart);
-        return response;
+        return this.getAlreadyExistsError();
       }
 
-      response.setResult( await validCart.save());
+      response.setResult(await validCart.save());
       return response;
 
     } catch (error) {
@@ -56,13 +55,16 @@ module.exports = {
 
   async getById(id) {
     const response = new Response();
-
     if (!isValidId(id)) {
       return this.getInvalidIdError();
     }
 
     try {
       const result = await CartModel.findById(id)
+      if (!result) {
+        return this.getCartNotFoundError();
+      }
+
       response.setResult(result);
       return response
 
@@ -191,8 +193,12 @@ module.exports = {
 
     return await this.getById(cart.id)
       .then(data => {
-        response.setResult(new CartCalculator(data.result));
-        return response;
+        try {
+          response.setResult(new CartCalculator(data.result));
+          return response;
+        } catch (error) {
+          return this.getUnknownError();
+        }
       })
       .catch(error => {
         return this.getUnknownError(error);
@@ -242,7 +248,18 @@ module.exports = {
     response.setError({
       code: grpc.status.UNKNOWN,
       message: error.message,
-      source : 'shopping-cart'
+      source: 'shopping-cart'
+    })
+
+    return response
+  },
+
+  getAlreadyExistsError(error) {
+    const response = new Response()
+    response.setError({
+      code: grpc.status.ALREADY_EXISTS,
+      message: error.message,
+      source: 'shopping-cart'
     })
 
     return response
@@ -253,7 +270,7 @@ module.exports = {
     response.setError({
       code: grpc.status.INVALID_ARGUMENT,
       message: 'Invalid Id.',
-      source : 'shopping-cart'
+      source: 'shopping-cart'
     })
     return response
   },
@@ -263,7 +280,7 @@ module.exports = {
     response.setError({
       code: grpc.status.NOT_FOUND,
       message: 'The cart was not found.',
-      source : 'shopping-cart'
+      source: 'shopping-cart'
     })
     return response
   },
@@ -273,7 +290,7 @@ module.exports = {
     response.setError({
       code: grpc.status.NOT_FOUND,
       message: 'The product was not found.',
-      source : 'shopping-cart'
+      source: 'shopping-cart'
     })
     return response
   },

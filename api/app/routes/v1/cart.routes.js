@@ -9,7 +9,7 @@ module.exports = class CartRoutes {
 
     /* GET */
     this.router.get(`${this.path}/ping`, this.controller.ping);
-    this.router.get(`${this.path}/get-by-cart/:cartId`, this.controller.getById);
+    this.router.get(`${this.path}/:cartId`, this.controller.getById);
     this.router.get(`${this.path}/get-by-user/:userId`, this.controller.getByUserId);
     this.router.get(`${this.path}/calculate/:cartId`, this.controller.calculate);
 
