@@ -26,7 +26,7 @@ message GetManyRequest{
 
 message PingResponse {
   string ping = 1;
-}
+} 
 
 message ProductResponse {
   string _id = 1;

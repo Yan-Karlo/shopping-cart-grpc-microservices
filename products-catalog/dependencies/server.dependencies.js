@@ -10,6 +10,6 @@ module.exports = {
       defaults: true,
       oneofs: true,
     },
-    implementation : require('../implementations/product.implementation'),
+    implementation: require('../implementations/product.implementation'),
   }
 }

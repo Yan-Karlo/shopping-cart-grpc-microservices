@@ -65,7 +65,7 @@ module.exports = class CartService {
 
   getByUserId = async (userId) => {
     const response = new Response();
-    console.log(JSON.stringify({userId}, null, 4))
+    console.log(JSON.stringify({ userId }, null, 4))
     return this.client.getByUserId(userId)
       .then(resp => {
         return resp;
@@ -124,7 +124,7 @@ module.exports = class CartService {
   calculate(id) {
     const response = new Response();
 
-    return this.client.calculate({id})
+    return this.client.calculate({ id })
       .then(resp => {
         return resp;
 
@@ -137,7 +137,20 @@ module.exports = class CartService {
   removeProduct(ProductExclusion) {
     const response = new Response();
 
-    return this.client.removeProduct({...ProductExclusion})
+    return this.client.removeProduct({ ...ProductExclusion })
+      .then(resp => {
+        return resp;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response.result;
+      });
+  }
+
+  updateCartsPrices(newPrice) {
+    const response = new Response();
+
+    return this.client.updateCartsPrices(newPrice)
       .then(resp => {
         return resp;
 

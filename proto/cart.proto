@@ -15,6 +15,7 @@ service CartService {
   rpc Calculate (CartByIdRequest) returns (CalculateResponse);
   rpc GetByUserId (GetByUserIdRequest) returns (CartResponse);
   rpc RemoveProduct (RemoveProductRequest) returns (UpdateResponse);
+  rpc UpdateCartsPrices (UpdatePricesRequest) returns (UpdatePricesResponse);
 }
 
 message AddCouponRequest {
@@ -24,7 +25,7 @@ message AddCouponRequest {
 
 message AddProductRequest {
   string cartId = 1;
-  ProductNoTimestamps product = 2;
+  ProductNoTimestamps product = 2; 
 }
 
 message CalculateResponse {
@@ -116,4 +117,15 @@ message RemoveProductRequest {
 
 message UpdateResponse {
   string updatedAt = 1;
+}
+
+message UpdatePricesRequest {
+  string productId = 1;
+  double price = 2;
+}
+
+message UpdatePricesResponse {
+  bool isOK = 1;
+  int32 matchedCount = 2;
+  int32 modifiedCount = 3;
 }

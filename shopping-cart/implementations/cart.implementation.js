@@ -43,23 +43,27 @@ module.exports = {
   async qtyUpdate(call, callback) {
     const response = await cartService.qtyUpdate(call.request);
     return this.buildCallback(response, callback)
-},
+  },
 
   async calculate(call, callback) {
     const response = await cartService.calculate(call.request);
     return this.buildCallback(response, callback)
-},
+  },
 
   async removeProduct(call, callback) {
     const response = await cartService.removeProduct(call.request);
     return this.buildCallback(response, callback)
-},
+  },
+
+  async updateCartsPrices(call, callback) {
+    const response = await cartService.updateCartsPrices(call.request);
+    return this.buildCallback(response, callback)
+  },
 
   buildCallback(response, callback) {
     if (response.isError)
       return callback(response.result, null);
     else
       return callback(null, response.result);
-
   }
 };

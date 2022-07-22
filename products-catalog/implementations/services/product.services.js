@@ -59,7 +59,6 @@ module.exports = {
             $in: [...products.map(id => id.id)]
           }
       }
-      console.log(JSON.stringify(query,null,2))
 
       const result = await ProductModel.find(query)
       response.setResult({ products: [...result] });
@@ -70,16 +69,26 @@ module.exports = {
     }
   },
 
-  async updatePrice({ id, price } = newPrice) {
+  async updatePrice({id, price}) {
     if (!isValidId(id))
       return this.getInvalidIdError();
 
-    const updatedProduct = await ProductModel.findByIdAndUpdate(
-      {
-        _id: mongoose.mongo.ObjectId(id)
-      },
-      { price })
-    return this.getUpdate(updatedProduct);
+    try{
+      const updatedProduct = await ProductModel.findByIdAndUpdate(
+        {
+          _id: mongoose.mongo.ObjectId(id)
+        },
+        { price })
+
+      if (!updatedProduct) {
+        return this.getProductNotFoundError()
+      }
+
+      return this.getUpdate(updatedProduct);
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
   },
 
   async getUpdate(document) {
@@ -118,4 +127,5 @@ module.exports = {
     })
     return response
   },
+
 };

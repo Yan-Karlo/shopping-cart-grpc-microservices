@@ -243,6 +243,42 @@ module.exports = {
     }
   },
 
+  async updateCartsPrices({ productId, price }) {
+    const response = new Response();
+
+    try {
+      const query = {
+        'products.productId': productId
+      }
+      const update = {
+        $set: {
+          'products.$.price': price
+        }
+      }
+
+      const result = await CartModel.updateMany(query, update).exec();
+
+      if (result.acknowledged) {
+        response.setResult({
+          isOK: true,
+          matchedCount: result.matchedCount,
+          modifiedCount: result.modifiedCount,
+        })
+      } else {
+        response.setResult({
+          isOK: false,
+          matchedCount: result.matchedCount,
+          modifiedCount: result.modifiedCount,
+        })
+      }
+
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
+  },
+
   getUpdate(document) {
     const response = { updatedAt: document.updatedAt }
 
