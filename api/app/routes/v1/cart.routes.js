@@ -20,6 +20,7 @@ module.exports = class CartRoutes {
     this.router.put(`${this.path}/clean/:cartId`, this.controller.clean);
     this.router.put(`${this.path}/add-product/:cartId`, this.controller.addProduct);
     this.router.put(`${this.path}/add-coupon/:cartId`, this.controller.addCoupon);
+    this.router.put(`${this.path}/qty-update/:cartId`, this.controller.qtyUpdate);
     this.router.put(`${this.path}/remove-product/:cartId/:productId`, this.controller.removeProduct);
   }
 }

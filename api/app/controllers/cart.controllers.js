@@ -65,4 +65,10 @@ module.exports = class CartController{
     const response = await this.service.removeItem(req.params)
     return res.status(response.httpStatus || 200).json(response.result);
   }
+
+  qtyUpdate = async (req, res) => {
+    const {cartId} = req.params;
+    const response = await this.service.qtyUpdate({ ...req.body, cartId })
+    return res.status(response.httpStatus || 200).json(response.result);
+  }
 }
