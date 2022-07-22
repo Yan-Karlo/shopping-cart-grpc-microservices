@@ -8,12 +8,12 @@ service CartService {
   rpc Clean (CartByIdRequest) returns (UpdateResponse);
   rpc Create (CreateRequest) returns (CartResponse);
   rpc GetById (CartByIdRequest) returns (CartResponse);
-  rpc AddItem (AddItemRequest) returns (UpdateResponse);
+  rpc AddProduct (AddProductRequest) returns (UpdateResponse);
   rpc AddCoupon (AddCouponRequest) returns (UpdateResponse);
   rpc QtyUpdate (QtyUpdateRequest) returns (UpdateResponse);
   rpc Calculate (CartByIdRequest) returns (CalculateResponse);
   rpc GetByUserId (GetByUserIdRequest) returns (CartResponse);
-  rpc RemoveItem (RemoveItemRequest) returns (UpdateResponse);
+  rpc RemoveProduct (RemoveProductRequest) returns (UpdateResponse);
 }
 
 message AddCouponRequest {
@@ -21,7 +21,7 @@ message AddCouponRequest {
   Coupon coupon = 2;
 }
 
-message AddItemRequest {
+message AddProductRequest {
   string cartId = 1;
   ProductNoTimestamps product = 2;
 }
@@ -104,7 +104,7 @@ message QtyUpdateRequest {
   int32 quantity = 3;
 }
 
-message RemoveItemRequest {
+message RemoveProductRequest {
   string cartId = 1;
   string productId = 2;
 }

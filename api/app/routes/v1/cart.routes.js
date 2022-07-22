@@ -18,8 +18,8 @@ module.exports = class CartRoutes {
 
     /* PUT */
     this.router.put(`${this.path}/clean/:cartId`, this.controller.clean);
-    this.router.put(`${this.path}/add-item/:cartId`, this.controller.addItem);
+    this.router.put(`${this.path}/add-product/:cartId`, this.controller.addProduct);
     this.router.put(`${this.path}/add-coupon/:cartId`, this.controller.addCoupon);
-    this.router.put(`${this.path}/remove-item/:cartId/:productId`, this.controller.removeItem);
+    this.router.put(`${this.path}/remove-product/:cartId/:productId`, this.controller.removeProduct);
   }
 }

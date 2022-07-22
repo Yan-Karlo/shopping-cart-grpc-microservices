@@ -68,10 +68,10 @@ module.exports = class CartService {
       });
   }
 
-  addItem(cartId, product) {
+  addProduct(cartId, product) {
     const response = new Response();
 
-    return this.client.addItem({
+    return this.client.addProduct({
       cartId,
       product
     })
@@ -130,10 +130,10 @@ module.exports = class CartService {
       });
   }
 
-  removeItem(itemExclusion) {
+  removeProduct(ProductExclusion) {
     const response = new Response();
 
-    return this.client.removeItem({...itemExclusion})
+    return this.client.removeProduct({...ProductExclusion})
       .then(resp => {
         response.setResult(resp);
         return response;

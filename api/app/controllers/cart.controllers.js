@@ -34,7 +34,7 @@ module.exports = class CartController{
     return res.status(response.httpStatus || 200).json(response.result);
   }
 
-  addItem = async (req, res) => {
+  addProduct = async (req, res) => {
     const { cartId } = req.params;
     const product = { ...req.body };
     const response = await this.service.addItem(cartId, product)
@@ -61,7 +61,7 @@ module.exports = class CartController{
     return res.status(response.httpStatus || 200).json(response.result);
   }
 
-  removeItem = async (req, res) => {
+  removeProduct = async (req, res) => {
     const response = await this.service.removeItem(req.params)
     return res.status(response.httpStatus || 200).json(response.result);
   }

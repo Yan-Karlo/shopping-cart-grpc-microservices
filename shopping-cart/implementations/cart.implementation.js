@@ -25,8 +25,8 @@ module.exports = {
     return this.buildCallback(response, callback)
   },
 
-  async addItem(call, callback) {
-    const response = await cartService.addItem(call.request);
+  async addProduct(call, callback) {
+    const response = await cartService.addProduct(call.request);
     return this.buildCallback(response, callback)
   },
 
@@ -45,8 +45,8 @@ module.exports = {
     return this.buildCallback(response, callback)
 },
 
-  async removeItem(call, callback) {
-    const response = await cartService.removeItem(call.request);
+  async removeProduct(call, callback) {
+    const response = await cartService.removeProduct(call.request);
     return this.buildCallback(response, callback)
 },
 

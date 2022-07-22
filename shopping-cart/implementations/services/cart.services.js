@@ -86,9 +86,9 @@ module.exports = {
     }
   },
 
-  async addItem(cartItem) {
+  async addIProduct(cartProduct) {
     const response = new Response();
-    const { cartId: id, product } = cartItem;
+    const { cartId: id, product } = cartProduct;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
@@ -147,9 +147,9 @@ module.exports = {
     }
   },
 
-  async qtyUpdate(cartItem) {
+  async qtyUpdate(cartProduct) {
     const response = new Response();
-    const { cartId: id, productId, quantity } = cartItem;
+    const { cartId: id, productId, quantity } = cartProduct;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
@@ -205,9 +205,9 @@ module.exports = {
       })
   },
 
-  async removeItem(itemCancelation) {
+  async removeProduct(ProductCancelation) {
     const response = new Response();
-    const { cartId: id, productId } = itemCancelation;
+    const { cartId: id, productId } = ProductCancelation;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
