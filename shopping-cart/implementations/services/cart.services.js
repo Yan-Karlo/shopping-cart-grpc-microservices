@@ -7,6 +7,12 @@ const CartCalculator = require('../../entities/cart-calculator.entity');
 const isValidId = mongoose.Types.ObjectId.isValid
 
 module.exports = {
+  async ping(cart) {
+    const response = new Response();
+    response.setResult({ ping: 'pong' });
+    return response;
+  },
+
   async create(cart) {
     const response = new Response();
     const validCart = await new CartModel(cart);

@@ -9,19 +9,30 @@ module.exports = class CartService {
     this.client = new RPCClient(cartClient).getClient();
   }
 
-  ping = () => 'pong';
+  ping = () => {
+    const response = new Response();
+
+    return this.client.ping({}).then(
+      (resp) => {
+        return resp;
+      })
+      .catch((error) => {
+        response.setError(error)
+        return response.result;
+      });
+
+  }
 
   clean = async (id) => {
     const response = new Response();
 
     return this.client.clean({ id }).then(
       (resp) => {
-        response.setResult(resp);
-        return response;
+        return resp;
       })
       .catch((error) => {
         response.setError(error)
-        return response;
+        return response.result;
       });
 
   }
@@ -30,12 +41,11 @@ module.exports = class CartService {
     const response = new Response();
     return this.client.create({ ...cart }).then(
       (resp) => {
-        response.setResult(resp);
-        return response;
+        return resp;
       })
       .catch((error) => {
         response.setError(error)
-        return response;
+        return response.result;
       });
 
   }
@@ -45,12 +55,11 @@ module.exports = class CartService {
 
     return this.client.getById({ id })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -59,12 +68,11 @@ module.exports = class CartService {
     console.log(JSON.stringify({userId}, null, 4))
     return this.client.getByUserId(userId)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -76,12 +84,11 @@ module.exports = class CartService {
       product
     })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -93,12 +100,11 @@ module.exports = class CartService {
       coupon
     })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -107,12 +113,11 @@ module.exports = class CartService {
 
     return this.client.qtyUpdate(itemUpdate)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -121,12 +126,11 @@ module.exports = class CartService {
 
     return this.client.calculate({id})
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -135,12 +139,11 @@ module.exports = class CartService {
 
     return this.client.removeProduct({...ProductExclusion})
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 }

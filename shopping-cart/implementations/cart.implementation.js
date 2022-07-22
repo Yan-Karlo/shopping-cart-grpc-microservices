@@ -1,6 +1,11 @@
 const cartService = require('./services/cart.services');
 
 module.exports = {
+  async ping(call, callback) {
+    const response = await cartService.ping();
+    return this.buildCallback(response, callback);
+  },
+
   async create(call, callback) {
     const response = await cartService.create(call.request);
     return this.buildCallback(response, callback);

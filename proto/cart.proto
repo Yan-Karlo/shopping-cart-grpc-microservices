@@ -5,6 +5,7 @@ package cart;
 import "google/protobuf/empty.proto";
 
 service CartService {
+  rpc Ping (google.protobuf.Empty) returns (PingResponse);
   rpc Clean (CartByIdRequest) returns (UpdateResponse);
   rpc Create (CreateRequest) returns (CartResponse);
   rpc GetById (CartByIdRequest) returns (CartResponse);
@@ -73,6 +74,10 @@ message CreateRequest {
 
 message GetByUserIdRequest {
   string userId = 1;
+}
+
+message PingResponse {
+  string ping = 1;
 }
 
 message Product {

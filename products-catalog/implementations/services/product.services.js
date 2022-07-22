@@ -5,6 +5,12 @@ const Response = require('../../entities/response.entity');
 const isValidId = mongoose.Types.ObjectId.isValid;
 
 module.exports = {
+  async ping(cart) {
+    const response = new Response();
+    response.setResult({ ping: 'pong' });
+    return response;
+  },
+
   async getById(id) {
     const response = new Response();
 

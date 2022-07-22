@@ -9,19 +9,31 @@ module.exports = class CartService {
     this.client = new RPCClient(productClient).getClient();
   }
 
-  ping = () => 'pong';
+  ping = () => {
+    const response = new Response();
+
+    return this.client.ping({}).then(
+      (resp) => {
+        return resp;
+      })
+      .catch((error) => {
+        response.setError(error)
+        return response.result;
+      });
+
+  }
+
 
   getById = async (id) => {
     const response = new Response();
 
     return this.client.getById(id)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -30,12 +42,11 @@ module.exports = class CartService {
 
     return this.client.getAll({})
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -44,12 +55,11 @@ module.exports = class CartService {
 
     return this.client.updatePrice(item)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
