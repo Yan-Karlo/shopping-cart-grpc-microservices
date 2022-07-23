@@ -84,6 +84,11 @@ module.exports = {
 
     try {
       const result = await CartModel.findOne({ userId })
+
+      if (!result) {
+        return this.getCartNotFoundError();
+      }
+
       response.setResult(result);
       return response
 
@@ -92,7 +97,7 @@ module.exports = {
     }
   },
 
-  async addIProduct(cartProduct) {
+  async addProduct(cartProduct) {
     const response = new Response();
     const { cartId: id, product } = cartProduct;
 
@@ -140,12 +145,17 @@ module.exports = {
     }
 
     try {
-      response.setResult(await CartModel.findByIdAndUpdate(
+      const result = await CartModel.findByIdAndUpdate(
         { _id: id },
         { coupon },
         options,
-      ));
+      );
 
+      if(!result){
+        return this.getCartNotFoundError();
+      }
+
+      response.setResult(this.getUpdate(result));
       return response;
 
     } catch (error) {
@@ -200,8 +210,13 @@ module.exports = {
     return await this.getById(cart.id)
       .then(data => {
         try {
+          if (!data) {
+            return this.getCartNotFoundError();
+          }
+
           response.setResult(new CartCalculator(data.result));
           return response;
+
         } catch (error) {
           return this.getUnknownError();
         }
