@@ -1,5 +1,5 @@
 const RPCClient = require("../../engines/rpc-client,js");
-const dependencies = require('../../dependencies/api.dependencies')['development'];
+const dependencies = require('../../dependencies/api.dependencies')[process.env.NODE_ENV];
 const Response = require('../../entities/response.entity');
 
 module.exports = class CartService {

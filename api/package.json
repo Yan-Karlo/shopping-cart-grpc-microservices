@@ -4,12 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:cart:server": "nodemon ./shopping-cart/index.js",
-    "dev:api:server": "nodemon ./api/index.js",
-    "dev:product:server": "nodemon ./products-catalog/index.js",
-    "start:cart:server": "node ./shopping-cart/index.js",
-    "start:api:server": "node ./api/index.js",
-    "start:product:server": "node ./products-catalog/index.js"
+    "dev:api:server": "nodemon ./index.js",
+    "start:api:server": "nodemon -L ./index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +16,6 @@
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "grpc": "^1.24.11",
-    "grpc-promise": "^1.4.0",
     "mongoose": "^6.4.4",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.5.0",

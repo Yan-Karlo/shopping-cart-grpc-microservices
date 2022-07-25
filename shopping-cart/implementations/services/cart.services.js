@@ -311,11 +311,11 @@ module.exports = {
     return response
   },
 
-  getAlreadyExistsError(error) {
+  getAlreadyExistsError() {
     const response = new Response()
     response.setError({
       code: grpc.status.ALREADY_EXISTS,
-      message: error.message,
+      message: 'The cart already exists',
       source: 'shopping-cart'
     })
 

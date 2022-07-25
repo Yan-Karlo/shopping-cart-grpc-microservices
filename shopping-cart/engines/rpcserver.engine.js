@@ -2,7 +2,7 @@ const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 
 // const implementation = require('./implementation');
-const dependencies = require('../dependencies/server.dependencies');
+const dependencies = require('../dependencies/server.dependencies')[process.env.NODE_ENV];
 
 module.exports = class RpcServerEngine{
 
@@ -16,9 +16,10 @@ module.exports = class RpcServerEngine{
   }
 
   start = () => {
+    console.log('Environment: '+ process.env.NODE_ENV)
     console.log('Shopping Cart Server is starting...');
     this.server.start();
-    console.log('Shopping Cart Server is Running');
+    console.log('Shopping Cart Server is Running at '+ this.url);
     console.log('===================================')
   }
 

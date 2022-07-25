@@ -7,7 +7,7 @@ const isValidId = mongoose.Types.ObjectId.isValid;
 module.exports = {
   async ping(cart) {
     const response = new Response();
-    response.setResult({ ping: 'pong' });
+    response.setResult({ ping: 'pong2' });
     return response;
   },
 

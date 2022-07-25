@@ -10,6 +10,10 @@ module.exports = class CartController{
     return res.status(200).json(response)
   }
 
+  localPing = async (req, res) => {
+    return res.status(200).json("server is running")
+  }
+
   clean = async (req, res) => {
     const { cartId } = req.params;
     const response = await this.service.clean(cartId)
