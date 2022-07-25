@@ -1,8 +1,6 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const seed = require('../seeding/seeding');
-
-// const implementation = require('./implementation');
 const dependencies = require('../dependencies/server.dependencies')[process.env.NODE_ENV];
 
 module.exports = class RpcServerEngine{
@@ -18,9 +16,10 @@ module.exports = class RpcServerEngine{
   }
 
   start = () => {
+    console.log('Environment: '+ process.env.NODE_ENV)
     console.log('Product Server is starting...');
     this.server.start();
-    console.log('Product Server is Running');
+    console.log('Product Catalog Server is Running at '+ this.url);
     console.log('===================================')
     seed();
   }

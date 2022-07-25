@@ -7,6 +7,12 @@ const CartCalculator = require('../../entities/cart-calculator.entity');
 const isValidId = mongoose.Types.ObjectId.isValid
 
 module.exports = {
+  async ping(cart) {
+    const response = new Response();
+    response.setResult({ ping: 'pong' });
+    return response;
+  },
+
   async create(cart) {
     const response = new Response();
     const validCart = await new CartModel(cart);
@@ -78,6 +84,11 @@ module.exports = {
 
     try {
       const result = await CartModel.findOne({ userId })
+
+      if (!result) {
+        return this.getCartNotFoundError();
+      }
+
       response.setResult(result);
       return response
 
@@ -86,9 +97,9 @@ module.exports = {
     }
   },
 
-  async addItem(cartItem) {
+  async addProduct(cartProduct) {
     const response = new Response();
-    const { cartId: id, product } = cartItem;
+    const { cartId: id, product } = cartProduct;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
@@ -134,12 +145,17 @@ module.exports = {
     }
 
     try {
-      response.setResult(await CartModel.findByIdAndUpdate(
+      const result = await CartModel.findByIdAndUpdate(
         { _id: id },
         { coupon },
         options,
-      ));
+      );
 
+      if(!result){
+        return this.getCartNotFoundError();
+      }
+
+      response.setResult(this.getUpdate(result));
       return response;
 
     } catch (error) {
@@ -147,9 +163,9 @@ module.exports = {
     }
   },
 
-  async qtyUpdate(cartItem) {
+  async qtyUpdate(cartProduct) {
     const response = new Response();
-    const { cartId: id, productId, quantity } = cartItem;
+    const { cartId: id, productId, quantity } = cartProduct;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
@@ -194,8 +210,13 @@ module.exports = {
     return await this.getById(cart.id)
       .then(data => {
         try {
+          if (!data) {
+            return this.getCartNotFoundError();
+          }
+
           response.setResult(new CartCalculator(data.result));
           return response;
+
         } catch (error) {
           return this.getUnknownError();
         }
@@ -205,9 +226,9 @@ module.exports = {
       })
   },
 
-  async removeItem(itemCancelation) {
+  async removeProduct(ProductCancelation) {
     const response = new Response();
-    const { cartId: id, productId } = itemCancelation;
+    const { cartId: id, productId } = ProductCancelation;
 
     if (!isValidId(id)) {
       return this.getInvalidIdError();
@@ -237,6 +258,42 @@ module.exports = {
     }
   },
 
+  async updateCartsPrices({ productId, price }) {
+    const response = new Response();
+
+    try {
+      const query = {
+        'products.productId': productId
+      }
+      const update = {
+        $set: {
+          'products.$.price': price
+        }
+      }
+
+      const result = await CartModel.updateMany(query, update).exec();
+
+      if (result.acknowledged) {
+        response.setResult({
+          isOK: true,
+          matchedCount: result.matchedCount,
+          modifiedCount: result.modifiedCount,
+        })
+      } else {
+        response.setResult({
+          isOK: false,
+          matchedCount: result.matchedCount,
+          modifiedCount: result.modifiedCount,
+        })
+      }
+
+      return response
+
+    } catch (error) {
+      return this.getUnknownError(error);
+    }
+  },
+
   getUpdate(document) {
     const response = { updatedAt: document.updatedAt }
 
@@ -254,11 +311,11 @@ module.exports = {
     return response
   },
 
-  getAlreadyExistsError(error) {
+  getAlreadyExistsError() {
     const response = new Response()
     response.setError({
       code: grpc.status.ALREADY_EXISTS,
-      message: error.message,
+      message: 'The cart already exists',
       source: 'shopping-cart'
     })
 

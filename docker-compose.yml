@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  ##########################
+  db:
+    build: ./.docker/mongodb
+    container_name: mongodb
+    image: li_bd
+    ports:
+      - 27017:27017
+      - 28017:28017
+    volumes:
+      - ./.docker/mongodb/data:/data/db
+
+  ##########################
+  api:
+    build: ./api
+    entrypoint: ./entrypoint.sh
+    container_name: api
+    image: li_api
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=docker
+    volumes:
+      - ./api:/home/node/app
+    depends_on:
+      - db
+      - cart
+      - product
+
+  ##########################
+  cart:
+    build: ./shopping-cart
+    entrypoint: ./entrypoint.sh
+    container_name: cart
+    image: li_cart
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV=docker
+    volumes:
+      - ./shopping-cart:/home/node/app
+    depends_on:
+      - db
+
+  ##########################
+  product:
+    build: ./products-catalog
+    entrypoint: ./entrypoint.sh
+    container_name: product
+    image: li_product
+    ports:
+      - 3002:3002
+    environment:
+      - NODE_ENV=docker
+    volumes:
+      - ./products-catalog:/home/node/app
+    depends_on:
+      - db

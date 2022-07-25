@@ -9,6 +9,7 @@ module.exports = class CartRoutes {
 
     /* GET */
     this.router.get(`${this.path}/ping`, this.controller.ping);
+    this.router.get(`${this.path}/localping`, this.controller.localPing);
     this.router.get(`${this.path}/:cartId`, this.controller.getById);
     this.router.get(`${this.path}/get-by-user/:userId`, this.controller.getByUserId);
     this.router.get(`${this.path}/calculate/:cartId`, this.controller.calculate);
@@ -18,8 +19,9 @@ module.exports = class CartRoutes {
 
     /* PUT */
     this.router.put(`${this.path}/clean/:cartId`, this.controller.clean);
-    this.router.put(`${this.path}/add-item/:cartId`, this.controller.addItem);
+    this.router.put(`${this.path}/add-product/:cartId`, this.controller.addProduct);
     this.router.put(`${this.path}/add-coupon/:cartId`, this.controller.addCoupon);
-    this.router.put(`${this.path}/remove-item/:cartId/:productId`, this.controller.removeItem);
+    this.router.put(`${this.path}/qty-update/:cartId`, this.controller.qtyUpdate);
+    this.router.put(`${this.path}/remove-product/:cartId/:productId`, this.controller.removeProduct);
   }
 }

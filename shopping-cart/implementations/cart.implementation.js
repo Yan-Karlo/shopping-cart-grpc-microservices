@@ -1,6 +1,11 @@
 const cartService = require('./services/cart.services');
 
 module.exports = {
+  async ping(call, callback) {
+    const response = await cartService.ping();
+    return this.buildCallback(response, callback);
+  },
+
   async create(call, callback) {
     const response = await cartService.create(call.request);
     return this.buildCallback(response, callback);
@@ -25,8 +30,8 @@ module.exports = {
     return this.buildCallback(response, callback)
   },
 
-  async addItem(call, callback) {
-    const response = await cartService.addItem(call.request);
+  async addProduct(call, callback) {
+    const response = await cartService.addProduct(call.request);
     return this.buildCallback(response, callback)
   },
 
@@ -38,23 +43,27 @@ module.exports = {
   async qtyUpdate(call, callback) {
     const response = await cartService.qtyUpdate(call.request);
     return this.buildCallback(response, callback)
-},
+  },
 
   async calculate(call, callback) {
     const response = await cartService.calculate(call.request);
     return this.buildCallback(response, callback)
-},
+  },
 
-  async removeItem(call, callback) {
-    const response = await cartService.removeItem(call.request);
+  async removeProduct(call, callback) {
+    const response = await cartService.removeProduct(call.request);
     return this.buildCallback(response, callback)
-},
+  },
+
+  async updateCartsPrices(call, callback) {
+    const response = await cartService.updateCartsPrices(call.request);
+    return this.buildCallback(response, callback)
+  },
 
   buildCallback(response, callback) {
     if (response.isError)
       return callback(response.result, null);
     else
       return callback(null, response.result);
-
   }
 };

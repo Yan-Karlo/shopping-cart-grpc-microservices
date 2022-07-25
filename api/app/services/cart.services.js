@@ -1,5 +1,5 @@
 const RPCClient = require("../../engines/rpc-client,js");
-const dependencies = require('../../dependencies/api.dependencies')['development'];
+const dependencies = require('../../dependencies/api.dependencies')[process.env.NODE_ENV];
 const Response = require('../../entities/response.entity');
 
 module.exports = class CartService {
@@ -9,19 +9,30 @@ module.exports = class CartService {
     this.client = new RPCClient(cartClient).getClient();
   }
 
-  ping = () => 'pong';
+  ping = () => {
+    const response = new Response();
+
+    return this.client.ping({}).then(
+      (resp) => {
+        return resp;
+      })
+      .catch((error) => {
+        response.setError(error)
+        return response.result;
+      });
+
+  }
 
   clean = async (id) => {
     const response = new Response();
 
     return this.client.clean({ id }).then(
       (resp) => {
-        response.setResult(resp);
-        return response;
+        return resp;
       })
       .catch((error) => {
         response.setError(error)
-        return response;
+        return response.result;
       });
 
   }
@@ -30,12 +41,11 @@ module.exports = class CartService {
     const response = new Response();
     return this.client.create({ ...cart }).then(
       (resp) => {
-        response.setResult(resp);
-        return response;
+        return resp;
       })
       .catch((error) => {
         response.setError(error)
-        return response;
+        return response.result;
       });
 
   }
@@ -45,43 +55,40 @@ module.exports = class CartService {
 
     return this.client.getById({ id })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
   getByUserId = async (userId) => {
     const response = new Response();
-    console.log(JSON.stringify({userId}, null, 4))
+    console.log(JSON.stringify({ userId }, null, 4))
     return this.client.getByUserId(userId)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
-  addItem(cartId, product) {
+  addProduct(cartId, product) {
     const response = new Response();
 
-    return this.client.addItem({
+    return this.client.addProduct({
       cartId,
       product
     })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -93,12 +100,11 @@ module.exports = class CartService {
       coupon
     })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
@@ -107,40 +113,50 @@ module.exports = class CartService {
 
     return this.client.qtyUpdate(itemUpdate)
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
   calculate(id) {
     const response = new Response();
 
-    return this.client.calculate({id})
+    return this.client.calculate({ id })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
       });
   }
 
-  removeItem(itemExclusion) {
+  removeProduct(ProductExclusion) {
     const response = new Response();
 
-    return this.client.removeItem({...itemExclusion})
+    return this.client.removeProduct({ ...ProductExclusion })
       .then(resp => {
-        response.setResult(resp);
-        return response;
+        return resp;
 
       }).catch((error) => {
         response.setError(error);
-        return response;
+        return response.result;
+      });
+  }
+
+  updateCartsPrices(newPrice) {
+    const response = new Response();
+
+    return this.client.updateCartsPrices(newPrice)
+      .then(resp => {
+        return resp;
+
+      }).catch((error) => {
+        response.setError(error);
+        return response.result;
       });
   }
 }

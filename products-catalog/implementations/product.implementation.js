@@ -1,7 +1,12 @@
 const productService = require('./services/product.services');
 
 module.exports = {
-  async getAll(call, callback) {
+  async ping(call, callback) {
+    const response = await productService.ping();
+    return this.buildCallback(response, callback);
+  },
+
+ async getAll(call, callback) {
     const response = await productService.getAll();
     return this.buildCallback(response, callback)
   },

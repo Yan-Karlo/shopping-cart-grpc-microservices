@@ -1,5 +1,5 @@
 const swaggerUI = require('swagger-ui-express');
-const swaggerDocument = require('./documentation/swagger.json');
+const swaggerDocument = require('./documentation/openapi.json');
 const CartRoute = require('./v1/cart.routes');
 const ProductRoute = require('./v1/product.routes');
 

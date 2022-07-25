@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dependencies = require('../dependencies/server.dependencies');
+const dependencies = require('../dependencies/server.dependencies')[process.env.NODE_ENV];
 
 module.exports = class Database {
 
@@ -8,7 +8,7 @@ module.exports = class Database {
   }
 
   async start() {
-    await this.connect(this.dns).then(() => {
+    await this.connect().then(() => {
       console.log('Shopping-cart is connected to MongoDB.');
       this.isRunning = true;
     }).catch((err) => {
