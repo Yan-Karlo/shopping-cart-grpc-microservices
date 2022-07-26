@@ -41,7 +41,7 @@ module.exports = class CartController{
   addProduct = async (req, res) => {
     const { cartId } = req.params;
     const product = { ...req.body };
-    const response = await this.service.addItem(cartId, product)
+    const response = await this.service.addProduct(cartId, product)
     return res.status(response.httpStatus || 200).json(response);
   }
 

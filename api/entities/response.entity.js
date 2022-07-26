@@ -14,7 +14,7 @@ module.exports = class Response {
       httpStatus: this.httpStatus,
       code : error.code,
       message: error.details || error.message,
-      source: error.source // 'N/A'
+      source: error.source || 'API'
     }
   }
 

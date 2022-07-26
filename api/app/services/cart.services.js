@@ -4,9 +4,10 @@ const Response = require('../../entities/response.entity');
 
 module.exports = class CartService {
   constructor() {
-    const { rpcClients: { cartClient } } = dependencies;
+    const { rpcClients: { cartClient, productClient } } = dependencies;
 
     this.client = new RPCClient(cartClient).getClient();
+    this.productClient = new RPCClient(productClient).getClient();
   }
 
   ping = () => {
@@ -54,8 +55,13 @@ module.exports = class CartService {
     const response = new Response();
 
     return this.client.getById({ id })
-      .then(resp => {
-        return resp;
+      .then(async (resp) => {
+        const updatedCartResponse = await this.getCartProducts(resp)
+
+        if (updatedCartResponse.IsError)
+          return updatedCartResponse;
+        else
+          return updatedCartResponse.result;
 
       }).catch((error) => {
         response.setError(error);
@@ -65,10 +71,15 @@ module.exports = class CartService {
 
   getByUserId = async (userId) => {
     const response = new Response();
-    console.log(JSON.stringify({ userId }, null, 4))
+
     return this.client.getByUserId(userId)
-      .then(resp => {
-        return resp;
+      .then(async resp => {
+        const updatedCartResponse = await this.getCartProducts(resp)
+
+        if (updatedCartResponse.IsError)
+          return updatedCartResponse;
+        else
+          return updatedCartResponse.result;
 
       }).catch((error) => {
         response.setError(error);
@@ -125,8 +136,11 @@ module.exports = class CartService {
     const response = new Response();
 
     return this.client.calculate({ id })
-      .then(resp => {
-        return resp;
+      .then(async resp => {
+        console.log(resp);
+        const result = await this.getCartProducts(resp.cart)
+
+        return result.result;
 
       }).catch((error) => {
         response.setError(error);
@@ -158,5 +172,27 @@ module.exports = class CartService {
         response.setError(error);
         return response.result;
       });
+  }
+
+  async getCartProducts(cart) {
+    const response = new Response();
+    return Promise.all(
+      cart.products.map(prod => this.productClient.getById({ id: prod.productId }))
+    )
+      .then(result => {
+        result.forEach(el => {
+          const index = cart.products.map((product) => product.productId).indexOf(el._id)
+
+          if (index >= 0) {
+            cart.products[index]['description'] = el.description;
+            cart.products[index]['inventory'] = el.quantity;
+          }
+        })
+
+        response.setResult(cart)
+        return response;
+      })
+      .catch(error => response.setResult(error))
+
   }
 }

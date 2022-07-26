@@ -26,7 +26,7 @@
         "tags": [
           "Carts"
         ],
-        "summary": "Returns a POJO indicating that the microservice is running and listening.",
+        "summary": "Returns a message indicating that the microservice is running and listening.",
         "responses": {
           "200": {
             "description": "Successfull",
